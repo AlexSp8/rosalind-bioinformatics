@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Dict, List
 
 
-def file_to_str(file_path: str | Path) -> str:
+def file_to_single_str(file_path: str | Path) -> str:
     """
     Read a file and return its lines as a string.
 
@@ -37,6 +37,7 @@ def file_to_str_list(file_path: str | Path) -> List[str]:
 
 def file_to_int_list(file_path: str | Path) -> List[List[int]]:
     """Returns a list of lists of integers from a file"""
+
     with open(file_path, 'r') as f:
         int_list = [ [int(x) for x in line.split()] for line in f ]
     return int_list
@@ -69,7 +70,7 @@ def fasta_list_to_dict(fasta_list: List[str]) -> Dict[str, str]:
     fasta_label = ""
     for line in fasta_list:
         if '>' in line:
-            fasta_label = line
+            fasta_label = line[1:]
             fasta_dict[fasta_label] = ""
         else:
             fasta_dict[fasta_label] += line

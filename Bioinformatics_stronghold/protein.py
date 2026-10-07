@@ -2,14 +2,6 @@
 Base class for biological sequence manipulation (DNA, RNA).
 """
 
-import sys
-from pathlib import Path
-
-# Add parent directory to Python path for imports
-parent_dir = str(Path(__file__).parent.parent)
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
-
 from config import RNA_AMINO_TO_CODON, MONOISOTROPIC_AMINO_MASS_TABLE
 from biosequence import BioSequence
 

@@ -3,13 +3,6 @@ Base class for biological sequence manipulation (DNA, RNA).
 """
 
 from typing import List
-import sys
-from pathlib import Path
-
-# Add parent directory to Python path for imports
-parent_dir = str(Path(__file__).parent.parent)
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
 
 from config import BASE_NUCLEOTIDES, DNA_CODON_TO_AMINO, RNA_CODON_TO_AMINO
 from biosequence import BioSequence
@@ -26,6 +19,7 @@ class Nucleotide(BioSequence):
 
     def _validate(self) -> None:
         """Ensures the sequence matches the allowed nucleotides for its type."""
+
         allowed_nucleotides = BASE_NUCLEOTIDES.get(self.seq_type)
         if not allowed_nucleotides:
             raise ValueError(f"Unsupported sequence type: {self.seq_type}")
@@ -39,6 +33,7 @@ class Nucleotide(BioSequence):
     def transcribe(self) -> Nucleotide:
         """Returns the transcribed RNA sequence object from DNA sequence
         or the starting DNA object from RNA sequence"""
+
         if self.seq_type == 'DNA':
             new_seq = self.seq.replace("T", "U")
             new_seq_type = 'RNA'
@@ -51,6 +46,7 @@ class Nucleotide(BioSequence):
 
     def complement(self) -> Nucleotide:
         """Returns the complement of a sequence"""
+
         if self.seq_type == "DNA":
             mapping = str.maketrans('ATCG', 'TAGC')
         elif self.seq_type == "RNA":
@@ -62,22 +58,26 @@ class Nucleotide(BioSequence):
 
     def reverse_complement(self) -> Nucleotide:
         """Returns the reverse complement of a sequence"""
+
         complement_nuc_seq = self.complement()
         reverse_seq = complement_nuc_seq.seq[::-1]
         return Nucleotide(reverse_seq, self.seq_type)
 
     def gc_content(self) -> float:
         """Returns the GC content % of a sequence"""
+
         return self.monomer_content('C') + self.monomer_content('G')
 
     def translate(self, i_start: int = 0) -> Protein:
         """Returns amino-acid sequence from translation of sequence"""
+
         if self.seq_type == 'DNA':
             codon_dict = DNA_CODON_TO_AMINO
         elif self.seq_type == 'RNA':
             codon_dict = RNA_CODON_TO_AMINO
         else:
             raise ValueError("Invalid sequence type! Translation not performed!")
+
         codon_len = 3
         protein = []
         for i in range(i_start, len(self.seq) - codon_len + 1, codon_len):

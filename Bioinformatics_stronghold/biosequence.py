@@ -16,14 +16,17 @@ class BioSequence:
 
     def monomers_count(self) -> Dict[str, int]:
         """Returns the count of each monomer in a sequence"""
+
         return Counter(self.seq)
 
     def reverse(self) -> BioSequence:
         """Returns the reverse of a sequence"""
+
         return BioSequence(self.seq[::-1], self.seq_type)
 
     def monomer_content(self, m: str) -> float:
         """Returns the monomer (m) content % of a sequence"""
+
         if not self.seq:
             return 0.0
         content = self.seq.count(m)
@@ -31,6 +34,7 @@ class BioSequence:
 
     def point_mutations(self, mutation_seq: str) -> int:
         """Returns the number of point mutations between two sequences"""
+
         if len(self.seq) != len(mutation_seq):
             raise ValueError("Sequences must be the same length!")
         return sum(c1 != c2 for c1, c2 in zip(self.seq, mutation_seq))
@@ -43,48 +47,51 @@ class BioSequence:
         i = 0
         while i < len(motif):
             if motif[i] == '{':
-                jend = motif.index('}', i)
-                rules.append(("not", motif[i+1:jend]))
-                i = jend + 1
+                j_end = motif.index('}', i)
+                rules.append(("not", motif[i+1:j_end]))
+                i = j_end + 1
             elif motif[i] == '[':
-                jend = motif.index(']', i)
-                rules.append(("one of", motif[i+1:jend]))
-                i = jend + 1
+                j_end = motif.index(']', i)
+                rules.append(("one of", motif[i+1:j_end]))
+                i = j_end + 1
             else:
                 rules.append(("exact", motif[i]))
                 i += 1
         return rules
 
     @staticmethod
-    def motif_window_match(seq_window: str, rules: List[tuple] = None) -> bool:
-        """Checks if a window of a sequence matches the given motif rules"""
+    def motif_window_match(sub_seq: str, rules: List[tuple] = None) -> bool:
+        """Checks if a part of a sequence matches the given motif rules"""
+
+        if rules is None:
+            rules = []
 
         for i in range(len(rules)):
             rule_type, letters = rules[i]
             if rule_type == "not":
-                if seq_window[i] in letters:
+                if sub_seq[i] in letters:
                     return False
             elif rule_type == "one of":
-                if seq_window[i] not in letters:
+                if sub_seq[i] not in letters:
                     return False
             elif rule_type == "exact":
-                if seq_window[i] != letters:
+                if sub_seq[i] != letters:
                     return False
         return True
 
-    def motif_locations(self, motif_rules: List[tuple] = None) -> List[int]:
+    def motif_locations(self, rules: List[tuple] = None) -> List[int]:
         """
         Returns a list of locations in a sequence where a motif's rules are satisfied
         """
 
-        if motif_rules is None:
-            motif_rules = []
+        if rules is None:
+            rules = []
 
-        len_m = len(motif_rules)
+        len_m = len(rules)
         motif_locations = []
         for i in range(len(self.seq) - len_m + 1):
             window = self.seq[i:i + len_m]
-            if BioSequence.motif_window_match(window, motif_rules):
+            if BioSequence.motif_window_match(window, rules):
                 motif_locations.append(i + 1)
         return motif_locations
 

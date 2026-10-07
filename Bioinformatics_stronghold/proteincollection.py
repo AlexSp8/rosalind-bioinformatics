@@ -18,21 +18,8 @@ class ProteinCollection(BioSequenceCollection):
             label: Protein(seq) for label, seq in seq_dict.items()
         }
 
-    def motif_locations_dict(self, motif_rules: List[tuple] = None) -> Dict[str, List[int]]:
-        """Returns a dictionary of locations in a dictionary of sequence
-        where a motif's rules are satisfied
-        """
-        locations_dict = {}
-        for key, prot_seq in self.seq_dict.items():
-            motif_locations_list = prot_seq.motif_locations(motif_rules)
-            if motif_locations_list:
-                locations_dict[key] = motif_locations_list
-
-        return locations_dict
-
     @staticmethod
-    def all_proteins_from_all_reading_frames(
-        reading_frames: List[str]) -> List[Protein]:
+    def all_proteins_from_all_reading_frames(reading_frames: List[str]) -> List[Protein]:
         """Returns all protein sequences from a list of reading frames"""
 
         proteins_dict = {}

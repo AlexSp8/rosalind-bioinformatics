@@ -23,4 +23,5 @@ class NucleotideCollection(BioSequenceCollection):
 
     def gc_content_dict(self) -> Dict[str, float]:
         """Returns a dictionary of the GC content % of a dictionary of sequences"""
+
         return {key: nuc_seq.gc_content() for key, nuc_seq in self.seq_dict.items()}

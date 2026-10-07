@@ -2,11 +2,6 @@
 Central configuration for biological sequence constants and data.
 """
 
-from pathlib import Path
-
-# Base project directory
-PROJECT_ROOT = Path(__file__).parent
-
 # Nucleotide base definitions
 BASE_NUCLEOTIDES = {
     "DNA": ["A", "T", "G", "C"],

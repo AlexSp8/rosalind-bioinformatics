@@ -18,7 +18,8 @@ class BioSequenceCollection:
         }
 
     def monomer_content_dict(self, m: str) -> Dict[str, float]:
-        """Returns a dictionary of the monomer (m) content % of a dictionary of sequences"""
+        """Returns a dictionary of the monomer (m) content % for a dictionary of sequences"""
+
         return {key: bio_seq.monomer_content(m) for key, bio_seq in self.seq_dict.items()}
 
     def profile_matrix(self, monomers: List[str] = None) -> List[List[int]]:
@@ -62,7 +63,7 @@ class BioSequenceCollection:
         for s in self.seq_dict.keys():
             for t in self.seq_dict.keys():
                 if s != t and suffix[s] == prefix[t]:
-                    edges.append(f"{s[1:]} {t[1:]}")
+                    edges.append(f"{s} {t}")
         return edges
 
     def longest_shared_motif(self) -> str:
@@ -77,3 +78,16 @@ class BioSequenceCollection:
                 motif = shortest_seq[i:i + l]
                 if all(motif in seq for seq in seq_list):
                     return motif
+
+    def motif_locations_dict(self, motif_rules: List[tuple] = None) -> Dict[str, List[int]]:
+        """Returns a dictionary of locations in a dictionary of sequence
+        where a motif's rules are satisfied
+        """
+
+        locations_dict = {}
+        for key, bio_seq in self.seq_dict.items():
+            motif_locations_list = bio_seq.motif_locations(motif_rules)
+            if motif_locations_list:
+                locations_dict[key] = motif_locations_list
+
+        return locations_dict
